@@ -1,8 +1,10 @@
 import { combineReducers } from 'redux';
-import { searchRobots } from './search/search.reducer';
+import { searchRobotsReducer } from './search/search.reducer';
+import { robotsReducer } from './robots/robots.reducer';
 
 const rootReducer = combineReducers({
-  search: searchRobots
+  search: searchRobotsReducer,
+  robots: robotsReducer,
 });
 
 export default rootReducer;

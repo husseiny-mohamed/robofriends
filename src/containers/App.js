@@ -9,23 +9,14 @@ import Scroll from '../components/Scroll';
 import ErrorBoundary from '../components/ErrorBoundary';
 
 import { searchUser } from '../redux/search/search.actions';
+import { getRobots } from '../redux/robots/robots.actions';
 
 class App extends Component {
-  constructor() {
-    super();
-    this.state = {
-      robots: [],
-    };
-  }
-
   componentDidMount() {
-    fetch('https://jsonplaceholder.typicode.com/users')
-      .then((response) => response.json())
-      .then((users) => this.setState({ robots: users }));
+    this.props.onGetRobots();
   }
   render() {
-    const { robots } = this.state;
-    const { searchText, onSearchChange } = this.props;
+    const { searchText, onSearchChange, robots, isPending } = this.props;
 
     console.log('searchText: ', searchText);
 
@@ -33,7 +24,7 @@ class App extends Component {
       return robot.name.toLowerCase().includes(searchText.toLocaleLowerCase());
     });
 
-    return !robots.length ? (
+    return isPending ? (
       <h1>Loading...</h1>
     ) : (
       <div className="tc">
@@ -56,12 +47,16 @@ class App extends Component {
 const mapStateToProps = (state) => {
   return {
     searchText: state.search.searchText,
+    robots: state.robots.robots,
+    isPending: state.robots.isPending,
+    error: state.robots.error,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
     onSearchChange: (searchText) => dispatch(searchUser(searchText)),
+    onGetRobots: () => dispatch(getRobots()),
   };
 };
 
